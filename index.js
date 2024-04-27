@@ -3,7 +3,6 @@ const userChoice = document.querySelector(".user-choice");
 const userScore = document.querySelector(".user-score");
 const compChoice = document.querySelector(".comp-choice");
 const compScore = document.querySelector(".comp-score");
-const gameRound = document.querySelector(".round-num");
 const roundText = document.querySelector(".round");
 const rock = document.querySelector(".rock");
 const paper = document.querySelector(".paper");
@@ -26,7 +25,7 @@ scissors.addEventListener("click", () => {
 restart.addEventListener("click", () => {
   round = 1;
   roundText.classList.remove("won", "lost");
-  roundText.innerHTML = "Round 1";
+  roundText.innerHTML = `Round <span class="round-num">1</span>`;
   roundResult.innerHTML = `Round information`;
   rock.style.display = "block";
   paper.style.display = "block";
@@ -65,23 +64,23 @@ function playRound(humanChoice, computerChoice) {
     humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1);
   compChoice.innerHTML =
     computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1);
+
   if (choices[humanChoice].winsTo === computerChoice) {
     roundResult.classList.remove("lost");
     roundResult.classList.add("won");
     roundResult.innerHTML = `Round ${round} won!`;
     userScore.innerHTML = parseInt(userScore.innerHTML) + 1;
-    round++;
   } else if (choices[humanChoice].losesTo === computerChoice) {
     roundResult.classList.remove("won");
     roundResult.classList.add("lost");
     roundResult.innerHTML = `Round ${round} lost!`;
     compScore.innerHTML = parseInt(compScore.innerHTML) + 1;
-    round++;
   } else {
     roundResult.classList.remove("won", "lost");
     roundResult.innerHTML = `Round ${round} tied!`;
   }
 
+  round++;
   if (parseInt(userScore.innerHTML) === 5) {
     rock.style.display = "none";
     paper.style.display = "none";
@@ -98,10 +97,10 @@ function playRound(humanChoice, computerChoice) {
     restart.style.display = "block";
     roundResult.classList.remove("won", "lost");
     roundResult.innerHTML = `Game Over!`;
-    roundResult.innerHTML = `Round ${round} tied!`;
     roundText.classList.add("lost");
     roundText.innerHTML = "You Lost!";
   } else {
+    let gameRound = document.querySelector(".round-num");
     gameRound.innerHTML = round;
   }
 }
