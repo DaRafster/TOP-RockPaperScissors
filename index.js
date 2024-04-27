@@ -1,3 +1,41 @@
+const roundResult = document.querySelector(".round-info");
+const userChoice = document.querySelector(".user-choice");
+const userScore = document.querySelector(".user-score");
+const compChoice = document.querySelector(".comp-choice");
+const compScore = document.querySelector(".comp-score");
+const gameRound = document.querySelector(".round-num");
+const roundText = document.querySelector(".round");
+const rock = document.querySelector(".rock");
+const paper = document.querySelector(".paper");
+const scissors = document.querySelector(".scissors");
+const restart = document.querySelector(".restart");
+let round = 1;
+
+rock.addEventListener("click", () => {
+  playRound("rock", getComputerChoice());
+});
+
+paper.addEventListener("click", () => {
+  playRound("paper", getComputerChoice());
+});
+
+scissors.addEventListener("click", () => {
+  playRound("scissors", getComputerChoice());
+});
+
+restart.addEventListener("click", () => {
+  round = 1;
+  roundText.classList.remove("won", "lost");
+  roundText.innerHTML = "Round 1";
+  roundResult.innerHTML = `Round information`;
+  rock.style.display = "block";
+  paper.style.display = "block";
+  scissors.style.display = "block";
+  restart.style.display = "none";
+  userScore.innerHTML = 0;
+  compScore.innerHTML = 0;
+});
+
 function getComputerChoice() {
   let choice = Math.floor(Math.random() * (3 - 1 + 1) + 1);
   switch (choice) {
@@ -10,69 +48,60 @@ function getComputerChoice() {
   }
 }
 
-function getHumanChoice() {
-  return prompt("Enter your choice (rock, paper, or scissors):").toLowerCase();
-}
-
-function playGame() {
-  let humanScore = 0;
-  let computerScore = 0;
-
-  function playRound(humanChoice, computerChoice) {
-    const choices = {
-      rock: { losesTo: "paper", winsTo: "scissors" },
-      paper: { losesTo: "scissors", winsTo: "rock" },
-      scissors: { losesTo: "rock", winsTo: "paper" },
-    };
-
-    if (!(humanChoice in choices)) {
-      console.log("Invalid choice!");
-      return false;
-    }
-
-    if (choices[humanChoice].winsTo === computerChoice) {
-      console.log(
-        `You win! ${
-          humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1)
-        } beats ${
-          computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)
-        }`
-      );
-      humanScore++;
-    } else if (choices[humanChoice].losesTo === computerChoice) {
-      console.log(
-        `You lose! ${
-          humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1)
-        } loses to ${
-          computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)
-        }`
-      );
-      computerScore++;
-    } else {
-      console.log(
-        `It's a tie! You both chose ${
-          humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1)
-        }`
-      );
-
-      return false;
-    }
-
-    return true;
+function playRound(humanChoice, computerChoice) {
+  if (
+    parseInt(userScore.innerHTML) === 5 ||
+    parseInt(compScore.innerHTML) === 5
+  ) {
+    return;
   }
+  const choices = {
+    rock: { losesTo: "paper", winsTo: "scissors" },
+    paper: { losesTo: "scissors", winsTo: "rock" },
+    scissors: { losesTo: "rock", winsTo: "paper" },
+  };
 
-  let rounds = 5;
-  while (rounds > 0) {
-    let humanSelection = getHumanChoice();
-    let computerSelection = getComputerChoice();
-    if (playRound(humanSelection, computerSelection)) {
-      rounds--;
-    }
-  }
-
-  if (humanScore > computerScore) {
-    console.log(`You won! The score was ${humanScore} - ${computerScore}`);
+  userChoice.innerHTML =
+    humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1);
+  compChoice.innerHTML =
+    computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1);
+  if (choices[humanChoice].winsTo === computerChoice) {
+    roundResult.classList.remove("lost");
+    roundResult.classList.add("won");
+    roundResult.innerHTML = `Round ${round} won!`;
+    userScore.innerHTML = parseInt(userScore.innerHTML) + 1;
+    round++;
+  } else if (choices[humanChoice].losesTo === computerChoice) {
+    roundResult.classList.remove("won");
+    roundResult.classList.add("lost");
+    roundResult.innerHTML = `Round ${round} lost!`;
+    compScore.innerHTML = parseInt(compScore.innerHTML) + 1;
+    round++;
   } else {
-    console.log(`You lose! The score was ${humanScore} - ${computerScore}`);
+    roundResult.classList.remove("won", "lost");
+    roundResult.innerHTML = `Round ${round} tied!`;
+  }
+
+  if (parseInt(userScore.innerHTML) === 5) {
+    rock.style.display = "none";
+    paper.style.display = "none";
+    scissors.style.display = "none";
+    restart.style.display = "block";
+    roundResult.classList.remove("won", "lost");
+    roundResult.innerHTML = `Game Over!`;
+    roundText.classList.add("won");
+    roundText.innerHTML = "Congrats, You Won!";
+  } else if (parseInt(compScore.innerHTML) === 5) {
+    rock.style.display = "none";
+    paper.style.display = "none";
+    scissors.style.display = "none";
+    restart.style.display = "block";
+    roundResult.classList.remove("won", "lost");
+    roundResult.innerHTML = `Game Over!`;
+    roundResult.innerHTML = `Round ${round} tied!`;
+    roundText.classList.add("lost");
+    roundText.innerHTML = "You Lost!";
+  } else {
+    gameRound.innerHTML = round;
   }
 }
