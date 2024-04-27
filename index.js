@@ -76,5 +76,3 @@ function playGame() {
     console.log(`You lose! The score was ${humanScore} - ${computerScore}`);
   }
 }
-
-playGame();
