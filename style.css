@@ -22,6 +22,20 @@ h2 {
     color: #5D9C59;
 }
 
+footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 30px;
+}
+
+footer p {
+    font-weight: bold;
+}
+
+li {
+    list-style: none;
+}
+
 .lost {
     color: #DF2E38
 }
